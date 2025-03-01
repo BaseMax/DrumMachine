@@ -1,21 +1,34 @@
+import os
 import tkinter as tk
 from tkinter import filedialog
 import pygame
 import random
 
 class DrumMachine:
-    def __init__(self, master):
+    def __init__(self, master, sounds_dir="sounds"):
         self.master = master
+        self.instruments = []
+        self.sample_files = {}
+
         self.master.title("Professional Drum Machine")
         pygame.mixer.init()
 
-        self.instruments = ["Kick", "Snare", "HiHat", "Clap"]
-        self.sample_files = {
-            "Kick": "kick.wav",
-            "Snare": "snare.wav",
-            "HiHat": "hihat.wav",
-            "Clap": "clap.wav"
-        }
+        # self.instruments = ["Kick", "Snare", "HiHat", "Clap"]
+        # self.sample_files = {
+        #     "Kick": "kick.wav",
+        #     "Snare": "snare.wav",
+        #     "HiHat": "hihat.wav",
+        #     "Clap": "clap.wav"
+        # }
+        if not os.path.exists(sounds_dir):
+            print(f"Directory '{sounds_dir}' not found.")
+            return
+        for file in os.listdir(sounds_dir):
+            if file.endswith(".wav"):
+                name, _ = os.path.splitext(file)
+                self.instruments.append(name)
+                self.sample_files[name] = os.path.join(sounds_dir, file)
+
         self.sounds = {}
         for inst in self.instruments:
             try:
